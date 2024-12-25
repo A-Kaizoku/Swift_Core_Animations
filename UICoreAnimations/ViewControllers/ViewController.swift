@@ -7,15 +7,21 @@
 
 import UIKit
 
+enum CellTitles: String, CaseIterable {
+    case Move = "Move"
+    case Scale = "Scale"
+    case Rotate = "Rotate"
+    case Shake = "Shake"
+    case Circling = "Circling"
+}
+
 class ViewController: UIViewController {
     
     private var collectionView: UICollectionView!
-    
-    var cellTitles: [String] = ["Move", "Scale", "Rotate", "Shake", "Circling"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Main Screen"
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: view.bounds.width, height: 50)
@@ -50,12 +56,13 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: CollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
-        cell.configure(with: cellTitles[indexPath.item])
+        let title = CellTitles.allCases[indexPath.item].rawValue
+        cell.configure(with: title)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc: AnimationViewController = AnimationViewController()
-        self.present(vc, animated: true)
+        let vc: AnimationViewController = AnimationViewController(title: CellTitles.allCases[indexPath.item].rawValue)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
